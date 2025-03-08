@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flux Todo List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      /* Custom shadcn-like styles */
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+      }
+
+      .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+      }
+    </style>
+
+    <script type="module" defer>
+      import { store, toggleTheme, addItem, removeItem } from './index.js';
+
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', () => store.dispatch(toggleTheme()));
+
+      function renderTodos() {
+        const state = store.getState();
+        const todoList = document.getElementById('todo-list');
+
+        let todoItems = '';
+        state.items.forEach((item) => {
+          todoItems += `
+                    <div class="flex items-center justify-between p-3 rounded border dark:border-gray-700 dark:bg-gray-800 mb-2">
+                        <span>${item.name}</span>
+                        <button 
+                            class="delete-btn text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors" 
+                            onclick="store.dispatch(removeItem(${item.id}))"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>`;
+        });
+
+        todoList.innerHTML = `<div class="space-y-2">${todoItems}</div>`;
+      }
+
+      function renderThemeToggle() {
+        const state = store.getState();
+        if (state.theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          themeToggle.innerHTML = '🌙';
+        } else {
+          document.documentElement.classList.remove('dark');
+          themeToggle.innerHTML = '☀️';
+        }
+      }
+
+      store.subscribe(() => {
+        renderTodos();
+        renderThemeToggle();
+      });
+
+      const todoForm = document.getElementById('todo-form');
+      const todoInput = document.getElementById('todo-input');
+      const todoList = document.getElementById('todo-list');
+
+      todoForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const text = todoInput.value.trim();
+        if (text) {
+          const id = Date.now();
+          store.dispatch(addItem({ id, name: text }));
+          todoInput.value = '';
+        }
+      });
+
+      renderTodos();
+    </script>
+  </head>
+  <body class="bg-[hsl(var(--background))] text-[hsl(var(--foreground))] min-h-screen">
+    <div class="container mx-auto p-4 max-w-md">
+      <div class="flex justify-between items-center my-6">
+        <h1 class="text-2xl font-bold">Todo List</h1>
+        <button
+          id="theme-toggle"
+          class="p-2 rounded-md bg-[hsl(var(--secondary))] text-[hsl(var(--secondary-foreground))]"
+        >
+          ☀️
+        </button>
+      </div>
+
+      <div
+        class="bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] rounded-lg shadow-md p-6 border border-[hsl(var(--border))]"
+      >
+        <form id="todo-form" class="mb-6">
+          <div class="flex">
+            <input
+              type="text"
+              id="todo-input"
+              placeholder="Add a new task..."
+              class="flex-grow px-4 py-2 border border-[hsl(var(--input))] bg-transparent rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))] transition-colors"
+              required
+            />
+            <button
+              type="submit"
+              class="bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 px-4 py-2 rounded-r-lg transition-colors"
+            >
+              +
+            </button>
+          </div>
+        </form>
+
+        <div id="todo-list" class="space-y-2"></div>
+      </div>
+    </div>
+  </body>
+</html>
