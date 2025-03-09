@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flux Todo List</title>
+    <title>Dirty Check Todo List</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @tailwind base;
       @tailwind components;
       @tailwind utilities;
 
-      /* Custom shadcn-like styles */
       :root {
         --background: 0 0% 100%;
         --foreground: 222.2 84% 4.9%;
@@ -52,26 +51,35 @@
       }
     </style>
 
+    <script defer type="module" src="./index.js"></script>
     <script type="module" defer>
-      import { store, toggleTheme, addItem, removeItem } from './index.js';
+      import { dirtyChecker, toggleTheme, addItem, removeItem } from './index.js';
 
+      const themeToggle = document.getElementById('theme-toggle');
       const todoForm = document.getElementById('todo-form');
       const todoInput = document.getElementById('todo-input');
       const todoList = document.getElementById('todo-list');
-      const themeToggle = document.getElementById('theme-toggle');
+
+      const renderThemeToggle = () => {
+        if (dirtyChecker.getState('theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+          themeToggle.innerHTML = '🌙';
+        } else {
+          document.documentElement.classList.remove('dark');
+          themeToggle.innerHTML = '☀️';
+        }
+      };
 
       const renderTodos = () => {
-        const state = store.getState();
         const todoList = document.getElementById('todo-list');
-
         let todoItems = '';
-        state.items.forEach((item) => {
+        dirtyChecker.getState('items').forEach((item) => {
           todoItems += `
                     <div class="flex items-center justify-between p-3 rounded border dark:border-gray-700 dark:bg-gray-800 mb-2">
                         <span>${item.name}</span>
                         <button 
                             class="delete-btn text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors" 
-                            onclick="store.dispatch(removeItem(${item.id}))"
+                            onclick="removeItem(${item.id})"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -83,33 +91,19 @@
         todoList.innerHTML = `<div class="space-y-2">${todoItems}</div>`;
       };
 
-      const renderThemeToggle = () => {
-        const state = store.getState();
-        if (state.theme === 'dark') {
-          document.documentElement.classList.add('dark');
-          themeToggle.innerHTML = '🌙';
-        } else {
-          document.documentElement.classList.remove('dark');
-          themeToggle.innerHTML = '☀️';
-        }
-      };
-
-      themeToggle.addEventListener('click', () => store.dispatch(toggleTheme()));
+      themeToggle.addEventListener('click', toggleTheme);
       todoForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const text = todoInput.value.trim();
         if (text) {
           const id = Date.now();
-          store.dispatch(addItem({ id, name: text }));
+          addItem({ id, name: text });
           todoInput.value = '';
         }
       });
 
-      renderTodos();
-      store.subscribe(() => {
-        renderTodos();
-        renderThemeToggle();
-      });
+      dirtyChecker.watch('theme', 'light', renderThemeToggle);
+      dirtyChecker.watch('items', [], renderTodos);
     </script>
   </head>
   <body class="bg-[hsl(var(--background))] text-[hsl(var(--foreground))] min-h-screen">

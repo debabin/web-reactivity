@@ -51,3 +51,6 @@ export const toggleTheme = () => ({
 });
 
 store.dispatch(addItem({ id: 1, name: 'Item 1' }));
+
+window.store = store;
+window.removeItem = removeItem;
