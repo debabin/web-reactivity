@@ -1,4 +1,4 @@
-// Kernel inspired by E~wee~ctor:
+// Event graph: kernel с очередью и BFS по node.next / node.seq.
 // https://dev.to/effector/e-wee-ctor-writing-tiny-effector-from-scratch-1-1kap
 
 const graph = {
@@ -8,6 +8,7 @@ const graph = {
 
 let nodeId = 0;
 
+// Узел графа: seq — шаги вычисления, next — рёбра к следующим узлам
 export const createNode = ({ kind, meta = {}, next = [], seq = [] } = {}) => {
   const node = { id: ++nodeId, kind, meta, next, seq };
   graph.nodes.push(node);
@@ -20,6 +21,7 @@ const link = (from, to, type) => {
 
 const queue = [];
 
+// Обход графа в ширину: выполнить seq, прокинуть value в next
 const exec = () => {
   while (queue.length) {
     const { node, value } = queue.shift();
@@ -35,11 +37,13 @@ const exec = () => {
   }
 };
 
+// Точка входа: event/store вызывает launch → стартует computation cycle
 export const launch = (unit, value) => {
   queue.push({ node: unit.node, value });
   exec();
 };
 
+// Side-effect подписчик в графе (аналог watch)
 const addWatch = (unit, meta) => (handler) => {
   const watchNode = createNode({
     kind: 'subscribe',
@@ -83,6 +87,7 @@ export const formatGraph = () => {
     .join('\n');
 };
 
+// Event — callable unit, только запускает launch с payload
 export const createEvent = (name) => {
   const event = (payload) => launch(event, payload);
 
@@ -111,6 +116,7 @@ export const createStore = (defaultState, name) => {
     }),
     getState: () => currentState,
     set: (value) => launch(store, value),
+    // Промежуточный reduce-узел между event и store
     reduceOn(event, reducer) {
       const reduceNode = createNode({
         kind: 'reduce',
@@ -134,6 +140,7 @@ export const createStore = (defaultState, name) => {
   return store;
 };
 
+// Связка trigger → transform/guard → to (аналог sample в Effector)
 export const when = ({ trigger, read, transform, guard, to }) => {
   const targetLabel = to.node?.meta?.label ?? to.node?.meta?.name ?? 'target';
 

@@ -1,3 +1,6 @@
+// MVC: Model хранит state и уведомляет подписчиков.
+// View и Controller живут снаружи (usage.js / index.js).
+
 export const createModel = (initialState) => {
   let state = { ...initialState };
   const listeners = [];

@@ -1,3 +1,6 @@
+// Flux: однонаправленный поток action → reducer → state → view.
+// Store — единственный источник правды, изменения только через dispatch.
+
 const createDispatcher = () => {
   const callbacks = [];
 
@@ -23,6 +26,7 @@ const createDispatcher = () => {
 
 export const dispatcher = createDispatcher();
 
+// Собирает несколько reducer-ов в один, по ключам state
 export const combineReducers = (reducers) => {
   return (state = {}, action) => {
     const nextState = {};

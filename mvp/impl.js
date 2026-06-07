@@ -1,3 +1,6 @@
+// MVP: View пассивный — только события наружу и команды отображения внутрь.
+// Presenter знает и о Model, и о View; Model не знает о View.
+
 export const createModel = (initialState) => {
   let state = { ...initialState };
   const listeners = [];
@@ -19,6 +22,7 @@ export const createModel = (initialState) => {
 
 export const createPresenter = (model) => ({
   attach(view, handlers) {
+    // View → Presenter: события UI без знания о model
     view.onThemeToggle(() => {
       model.setState(handlers.onThemeToggle(model.getState()));
     });
@@ -34,6 +38,7 @@ export const createPresenter = (model) => ({
       model.setState(handlers.onRemoveItem(model.getState(), id));
     });
 
+    // Presenter → View: явно обновляем UI после изменения model
     const render = (state) => {
       view.setTheme(state.theme);
       view.setItems(state.items);

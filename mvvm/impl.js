@@ -1,3 +1,6 @@
+// MVVM: observable-ячейка — основа ViewModel.
+// View подписывается на изменения value, двусторонняя связь через setter.
+
 export const createObservable = (initialValue) => {
   let value = initialValue;
   const subscribers = new Set();

@@ -58,6 +58,63 @@ body.app {
   padding: 1rem;
 }
 
+.app-container-wide {
+  max-width: 56rem;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.compare-panel {
+  margin: 0;
+}
+
+.compare-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.compare-title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.compare-subtitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.compare-output {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  background: hsl(var(--muted));
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+}
+
+.compare-spaced {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-container-wide {
+    max-width: 28rem;
+  }
+}
+
 .app-header {
   display: flex;
   justify-content: space-between;

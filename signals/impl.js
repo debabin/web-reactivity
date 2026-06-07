@@ -1,3 +1,6 @@
+// Signals: pull-push реактивность.
+// read() — pull (ленивый пересчёт), set/invalidate — push подписчикам.
+
 let activeConsumer = null;
 
 export const signal = (initialValue) => {
@@ -5,6 +8,7 @@ export const signal = (initialValue) => {
   const subscribers = new Set();
 
   const read = () => {
+    // При чтении внутри effect/computed — регистрируем зависимость
     if (activeConsumer) {
       subscribers.add(activeConsumer);
       activeConsumer.deps.add(subscribers);
@@ -42,6 +46,7 @@ export const computed = (compute) => {
       activeConsumer.deps.add(subscribers);
     }
 
+    // Pull: пересчитываем только когда dirty и кто-то читает
     if (dirty) {
       deps.forEach((dep) => dep.delete(read));
       deps.clear();

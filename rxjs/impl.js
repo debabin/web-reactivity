@@ -1,3 +1,6 @@
+// Observer + hot pipeline без RxJS.
+// Subject — hot (multicast, без replay), BehaviorSubject — hot с replay последнего значения.
+
 const toObserver = (observer) =>
   typeof observer === 'function' ? { next: observer } : observer;
 
@@ -14,6 +17,7 @@ export const createObservable = (subscribeFn) => {
   return observable;
 };
 
+// Hot: поздний подписчик не получит прошлые значения
 export const createSubject = () => {
   const observers = new Set();
 
@@ -29,6 +33,7 @@ export const createSubject = () => {
   return subject;
 };
 
+// Hot + replay: новый подписчик сразу получает currentValue
 export const createBehaviorSubject = (initialValue) => {
   let currentValue = initialValue;
   const observers = new Set();
@@ -48,6 +53,7 @@ export const createBehaviorSubject = (initialValue) => {
   return subject;
 };
 
+// Оператор pipeline: аккумулирует поток action$ в state$
 export const scan = (reducer, seed) => (source$) => {
   const output$ = createBehaviorSubject(seed);
 
