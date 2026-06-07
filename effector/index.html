@@ -3,18 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flux Todo List</title>
+    <title>Effector Todo List</title>
     <link rel="stylesheet" href="../shared/styles.css" />
     <script type="module" src="./usage.js"></script>
   </head>
   <body class="app">
     <div class="app-container">
       <div class="app-header">
-        <h1 class="app-title">Todo List <span class="app-badge">Flux</span></h1>
+        <h1 class="app-title">Todo List <span class="app-badge">Effector</span></h1>
         <button id="theme-toggle" class="theme-toggle">☀️</button>
       </div>
 
       <div class="card">
+        <p class="graph-hint">
+          Event graph (Effector-inspired, see
+          <a href="https://dev.to/effector/e-wee-ctor-writing-tiny-effector-from-scratch-1-1kap">E~wee~ctor</a>):
+          <code>launch</code> → queue → BFS по <code>node.next</code> и <code>node.seq</code>.
+        </p>
+
         <form id="todo-form" class="todo-form">
           <div class="todo-form-row">
             <input
@@ -29,6 +35,11 @@
         </form>
 
         <div id="todo-list" class="todo-list"></div>
+
+        <details class="graph-panel">
+          <summary>Computation graph</summary>
+          <pre id="graph-view" class="graph-view"></pre>
+        </details>
       </div>
     </div>
   </body>
