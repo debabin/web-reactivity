@@ -1,0 +1,273 @@
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.app {
+  margin: 0;
+  min-height: 100vh;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.app-container {
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.app-container-wide {
+  max-width: 56rem;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.compare-panel {
+  margin: 0;
+}
+
+.compare-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.compare-title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.compare-subtitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.compare-output {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  background: hsl(var(--muted));
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+}
+
+.compare-spaced {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-container-wide {
+    max-width: 28rem;
+  }
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.app-badge {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: hsl(var(--muted-foreground));
+}
+
+.theme-toggle {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+.card {
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.todo-form {
+  margin-bottom: 1.5rem;
+}
+
+.todo-form-row {
+  display: flex;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid hsl(var(--input));
+  border-right: none;
+  border-radius: 0.5rem 0 0 0.5rem;
+  background: transparent;
+  color: inherit;
+  outline: none;
+  transition: box-shadow 0.15s;
+}
+
+.todo-input:focus {
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.todo-submit {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0 0.5rem 0.5rem 0;
+  cursor: pointer;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  transition: opacity 0.15s;
+}
+
+.todo-submit:hover {
+  opacity: 0.9;
+}
+
+.todo-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+}
+
+.dark .todo-item {
+  border-color: rgb(55 65 81);
+  background: rgb(31 41 55);
+}
+
+.todo-delete {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(107 114 128);
+  transition: color 0.15s;
+}
+
+.todo-delete:hover {
+  color: rgb(239 68 68);
+}
+
+.dark .todo-delete {
+  color: rgb(156 163 175);
+}
+
+.dark .todo-delete:hover {
+  color: rgb(248 113 113);
+}
+
+.todo-delete-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: block;
+}
+
+.graph-hint {
+  margin: 0;
+  flex: 1;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.graph-hint code {
+  font-size: 0.8125rem;
+}
+
+.graph-panel {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.graph-panel summary {
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.graph-view {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem;
+  overflow: auto;
+  border-radius: 0.375rem;
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}

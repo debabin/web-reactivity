@@ -1,8 +1,12 @@
+// Dirty checking: UI не подписывается на изменения напрямую.
+// Периодически сравниваем текущее и прошлое значение (reference equality).
+
 export const createDirtyChecker = (interval = 100) => {
   const watchedValues = new Map();
 
   const checkDirty = () => {
     for (const [key, { value, callback }] of watchedValues.entries()) {
+      // callback вызывается только если ссылка на value изменилась
       if (value !== watchedValues.get(key).lastValue) {
         callback(value, watchedValues.get(key).lastValue);
         watchedValues.get(key).lastValue = value;

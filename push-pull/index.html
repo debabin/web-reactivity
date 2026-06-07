@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Push vs Pull</title>
+    <link rel="stylesheet" href="../shared/styles.css" />
+    <script type="module" src="./usage.js"></script>
+  </head>
+  <body class="app">
+    <div class="app-container app-container-wide">
+      <div class="app-header">
+        <h1 class="app-title">Push vs Pull</h1>
+      </div>
+
+      <p class="graph-hint">
+        Один pipeline (filter чётные → ×2). Push: RxJS emit'ит в subscribe. Pull: Iterator читает
+        коллекцию; Promise — те же шаги через <code>.then</code>, одно значение.
+      </p>
+
+      <div class="compare-grid">
+        <section class="card compare-panel">
+          <h2 class="compare-title">Push <span class="app-badge">RxJS</span></h2>
+          <pre class="graph-view">from(source).pipe(
+  filter(x =&gt; x % 2 === 0),
+  map(x =&gt; x * 2),
+  take(3)
+).subscribe(onNext)</pre>
+          <output id="push-output" class="compare-output">…</output>
+        </section>
+
+        <section class="card compare-panel">
+          <h2 class="compare-title">Pull</h2>
+
+          <h3 class="compare-subtitle">Iterator helpers <span class="app-badge">N values</span></h3>
+          <pre class="graph-view">Iterator.from(source)
+  .filter(x =&gt; x % 2 === 0)
+  .map(x =&gt; x * 2)
+  .take(3)
+  .toArray()</pre>
+          <output id="iterator-output" class="compare-output">…</output>
+
+          <h3 class="compare-subtitle compare-spaced">Promise <span class="app-badge">1 value</span></h3>
+          <pre class="graph-view">Promise.resolve(single)
+  .then(filterEven)
+  .then(double)
+// await result</pre>
+          <output id="promise-output" class="compare-output">…</output>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
